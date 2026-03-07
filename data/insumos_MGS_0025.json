@@ -1,0 +1,283 @@
+{
+  "tipo_proyecto_generacion_electrica": {
+    "valor": "Generación Eléctrica",
+    "fuente": null
+  },
+  "etapa_del_proyecto": {
+    "valor": "Inversión",
+    "fuente": null
+  },
+  "tipo_de_solicitante": {
+    "valor": [
+      "Principal",
+      "Secundario"
+    ],
+    "fuente": null
+  },
+  "rol": {
+    "valor": [
+      "Dueño del Proyecto",
+      "Entidad Bancaria",
+      "Instalador",
+      "Importador",
+      "Consultor",
+      "Proveedor"
+    ],
+    "fuente": null
+  },
+  "nombre_contacto": {
+    "valor": "Roberth Ricciulli",
+    "fuente": null
+  },
+  "telefono_celular_contacto": {
+    "valor": "3054040085",
+    "fuente": null
+  },
+  "correo_electronico_contacto": {
+    "valor": "roberth@solenium.co",
+    "fuente": null
+  },
+  "pais": {
+    "valor": "Colombia",
+    "fuente": null
+  },
+  "tipo_de_generador": {
+    "valor": "Generador",
+    "fuente": null
+  },
+  "tipo_fnce": {
+    "valor": "Solar",
+    "fuente": null
+  },
+  "recurso_energetico": {
+    "valor": "Sol",
+    "fuente": null
+  },
+  "tecnologia": {
+    "valor": "Fotovoltaica",
+    "fuente": null
+  },
+  "sector": {
+    "valor": "Generación Eléctrica",
+    "fuente": null
+  },
+  "zona": {
+    "valor": "Sistema Interconectado Nacional (SIN)",
+    "fuente": null
+  },
+  "vida_util_proyecto_anios": {
+    "valor": 25,
+    "fuente": null
+  },
+  "nivel_tension_kv": {
+    "valor": "Nivel 2: Sistemas con tensión mayor o igual a 1 kV y menor a 30 kV",
+    "fuente": null
+  },
+  "nit_inversionista": {
+    "valor": "901938257",
+    "fuente": "proyectos_solenium.json"
+  },
+  "departamento": {
+    "valor": "Cesar",
+    "fuente": "proyectos_solenium.json"
+  },
+  "municipio": {
+    "valor": "El Copey",
+    "fuente": "proyectos_solenium.json"
+  },
+  "nombre_del_proyecto": {
+    "valor": "MGS_0025",
+    "fuente": "proyectos_solenium.json"
+  },
+  "nombre_operador_de_red": {
+    "valor": "Afinia",
+    "fuente": "proyectos_solenium.json"
+  },
+  "inicio_de_construccion": {
+    "valor": "2024-12-06",
+    "fuente": "proyectos_solenium.json"
+  },
+  "entrada_de_operacion": {
+    "valor": "2025-06-06",
+    "fuente": "proyectos_solenium.json"
+  },
+  "capacidad_instalada_kwp_plano": {
+    "valor": 990.0,
+    "fuente": "SDS4_Cope-CIV-PL-01_Plano de localizaciones y accesos.pdf"
+  },
+  "area_proyecto_m2": {
+    "valor": 19899.0,
+    "fuente": "SDS4_Cope-CIV-PL-01_Plano de localizaciones y accesos.pdf"
+  },
+  "energia_generada_kwh_anio": {
+    "valor": 2129600.0,
+    "fuente": "Cope-INF-ELE-V2.pdf"
+  },
+  "eficiencia_planta_pct": {
+    "valor": 78.54,
+    "fuente": "Cope-INF-ELE-V2.pdf"
+  },
+  "capacidad_instalada_kwp": {
+    "valor": 990.0,
+    "fuente": "Cope-INF-ELE-V2.pdf"
+  },
+  "factor_de_la_planta_pct": {
+    "valor": 24.5561,
+    "fuente": "Calculado: Energía / (Capacidad * 365 * 24)"
+  },
+  "descripcion_del_proyecto": {
+    "valor": "El proyecto consiste en la instalación en suelo con seguidores solares de un sistema interconectado de generación de energía fotovoltaica de una capacidad instalada 990.0 kW, que estará localizado en el municipio de El Copey, Cesar, y estará interconectado a la red de distribución eléctrica en media tensión de corriente alterna trifásica.",
+    "fuente": "Calculado con campos anteriores"
+  },
+  "servicios_bt": {
+    "valor": [
+      {
+        "alcance": "Certificación RETIE de las instalaciones eléctricas de sistema solar fotovoltaico, alimentadores en DC y AC, Centro de Transformación, Red de Media Tensión Subterránea hasta punto de afloramiento con longitud de 21 metros. Incluye la revisión del sistema de puesta a tierra, apantallamiento, servicios auxiliares a la planta, entre otros equipos. -Potencia DC: 1320,8 kWp -Potencia AC:  990 kW -Número de Paneles: 2.032 -Capacidad de paneles: 650 Wp -Tipo de Tracker: 78x1V E-O Marca Zentrack -Tipo de Tracker: 80x1V E-O Marca Zentrack -Tipo Modulos: Longi Hi-MO9 lr7-72HYD-650M -Potencia Modulo: 650 Wp -Cantidad de Modulos: 2032 UNID. 1 $          5.340.000 2.",
+        "valor_total_cop": 5920000.0,
+        "valor_iva_cop": 1124800.0,
+        "proveedor": "CERTEAM SAS",
+        "servicio": "Certificación RETIE",
+        "_fuente_pdf": "1.OFERTA No. CT-25073 RETIE.pdf"
+      },
+      {
+        "alcance": "Inspección RETIE para red de media tensión subterránea a 13,8kV con longitud de 250 metros desde subestación a poste UNID. 1 $             580.000 REVISIÓN DOCUMENTAL: Se realizará revisión documental previa a la visita de inspección, puesta a tierra, cuadros de carga y condiciones de diseño de la \"a\" a la \"w\". Certificado RETIE bajo la resolución 90708 de 2013 y el esquema de inspección bajo la norma internacional ISO/IEC 17020:2012. ENTREGABLE: Dictamen RETIE con organismo acreditado por ONAC con el alcance detallado en la oferta. NUMERO DE VISITAS:  maximo dos (2) Si se requiere visita adicional, cada una tiene un costo de $1.500.000 UBUCACIÓN: El Copey,  Cesar https://maps.app.goo.gl/LLtz21asRCFVvBGv6 5.920.000,00 $ 5.920.000,00 $ 1.124.800,00 $ - $ 7.044.800,00 $ 3. No Incluye labores no descritas en esta oferta x Nombre del cliente: Oscar Carvajal Coordinador de Proyectos Cel: (+57) 322 247 52 04 Ingenieroproyectos1@certechenergy.com $             5.340.000 $                580.000 VALOR TOTAL Otros Subtotal IVA (19%) Gracias por su confianza en nosotros! TÉRMINOS Y CONDICIONES 1. Al cliente se le cobrará después de aceptada esta cotización. Si usted tiene alguna pregunta sobre esta cotización, por favor, póngase en contacto con nosotros 2. El cliente suministrará la información pertinente y normativo para el desarrollo del proyecto La aceptación del cliente (firmar a continuación): 5. Por favor enviar la cotización firmada al email indicado anteriormente director@certechenergy.com 4. PAGO Pago 1: 50% del valor de la oferta por anticipado a la prestación del servicio. Pago 2: 50% una vez ejecutadas las visitas y determinada la conformidad se deberá cancelar antes de la entrega de los dictámenes de inspección RETIE. COSTOS DIRECTOS + INDIRECTOS FECHA 5/05/2025 OFERTA No CT-25073 CERTIFICACIÓN RETIE INSTALCIONES ELECTRICAS SFV PROYECTO MGS 0025. EL COPEY - CESAR CLIENTE PROYECTO VALOR UNITARIO Página 1",
+        "valor_total_cop": 19.0,
+        "valor_iva_cop": 19.0,
+        "proveedor": null,
+        "servicio": null,
+        "_fuente_pdf": "1.OFERTA No. CT-25073 RETIE.pdf"
+      },
+      {
+        "alcance": "Solenium - Calle 46 #70 A 79 - 315 500 0797 PROPUESTA DE: INGENIERÍA DE DETALLE - PUESTA EN MARCHA DEL SISTEMA E HINCADO MGS 0025 EL COPEY - CESAR",
+        "valor_total_cop": 675992989.0,
+        "valor_iva_cop": 46.0,
+        "proveedor": null,
+        "servicio": null,
+        "_fuente_pdf": "10.SOLENIUM_EL COPEY MGS 0025 ING - PUESTA MARCHA - HINCADO.pdf"
+      },
+      {
+        "alcance": "1. Minigranja MGS0025: Ubicación:  El Copey Cesar. https://maps.app.goo.gl/AwTHFpYfGNbjJkw46 Pruebas a Ejecutar: • Análisis termográfico con dron (Pilotaje + informe) • Termografías en tableros, transformador de potencia y gabinetes. EQUIPOS A UTILIZAR EN LAS PRUEBAS • Termografía con Dron: Dron DJI Inspire 1 con Cámara ZENMUSE XT2 • Termografía: FLIR E75 CUADRO PRESUPUESTAL 1. MINIGRANJA MGS0025 ITEM PRUEBA UNIDAD CANTIDAD VALOR VALOR TOTAL TERMOGRAFIA 1.1 Analisis Termografico con Dron (Pilotaje + Informe) Sobrevuelo 1 $ 3.500.000 $ 3.500.000 1.2 Analisis Termografico en Piso ( Transformadores, Tableros, Inversores) Global 1 $ 1.500.000 $ 1.500.000 SUBTOTAL $ 5.000.000 IVA $ 950.000 TOTAL $ 5.950.000 TIEMPO DE EJECUCION Y OTRAS CONSIDERACIONES • Un (1) día para las pruebas de Termografía con dron y Termografía en piso. • El servicio se realizará en las instalaciones que defina el cliente en el alcance de la oferta. • Si por razones logísticas o de otra índole del cliente no se alcancen a realizar las pruebas en el tiempo establecido y se requiera realizar en otro día adicional, QUIMALDI INSTRUMENTS SAS podrá realizar las pruebas en otro día adicional bajo cotización y autorización previa. • Los paneles deberán ser des energizados y desconectados por el cliente. • La presente oferta contempla los servicios de ejecución de campo y diagnóstico de la información colectada de los ensayos. • La presente oferta contempla la aprobación total de la misma, en caso de aprobación parcial la oferta deberá ser reevaluada",
+        "valor_total_cop": 1.1,
+        "valor_iva_cop": 950000.0,
+        "proveedor": null,
+        "servicio": null,
+        "_fuente_pdf": "2.QUIMALDI - TERMOGRAFIAS MGS 0025.pdf"
+      },
+      {
+        "alcance": "VERIFICACION Y CERTIFICACION COT-SGI-001 VERSION 1 ________________________________________________________________________________________ Avenida El Dorado No. 69C – 03 Oficina 401 Torre C Bogotá – Colombia. http://www.negawattonline.com/ Tel. (601) 9371457 Cel. 3173736733 FECHA: 18/03/2025 CONSECUTIVO: COT-240 Señores: SOLENIUM SAS Solicitante: Ana Maria Arbelaez Fecha de Cotización: 18/03/2025 NIT: 90109244-5 Teléfono: 3153350653 Fecha de Vencimiento:  18/04//2025 Ciudad: MEDELLIN (ANTIOQUIA) Correo:  info@solenium.com Entregado a: Ana Maria Arbelaez De acuerdo con su amable solicitud, tenemos el gusto de cotizar lo siguiente: ITEM DESCRIPCIÓN CANTIDAD/ INTENSIDAD HORARIA VALOR UNITARIO VALOR TOTAL 1 VERIFICACION Y CERTIFICACION DE LA FRONTERA DE GENERACIÓN MGS 0025,  CON PROPOSITOS DE CUMPLIR CON LOS REQUISITOS ESTABLECIDOS EN EL CÓDIGO DE MEDIDA PARA ENTRADA COMERCIAL AL SISTEMA Y CUYOS ALCANCES INCLUYE: CUMPLIMIENTO O NO DE LA RESOLUCION CREG 038 DE 2014, MEDIANTE LA CORROBORACION DE LAS CONFORMIDADES EN LOS SISTEMAS DE MEDICION, COMUNICACIONES, TELEMEDICION HACIA LOS CENTROS DE GESTION DE MEDIDAS, SEGURIDAD INFORMATICA Y DE ACCESO. ESTA VERIFICACION SE HARA UTILIZANDO EL PROCEDIMIENTO SEÑALADO EN LA CIRCULAR 098 DEL 13 DE NOVIEMBRE DE 2014. 1 $4.600.000.oo $4.600.000.oo SUBTOTAL $4.600.000.oo IVA $874.000.oo TOTAL $5.474.000.oo Notas: TIEMPO DE ENTREGA:  5DIAS.  PAGO: CONTRAENTEGA LA CERTIFICACION SE REALIZARA CON LAS EVIDENCIAS SUMINISTRADAS POR EL CLIENTE FINAL.",
+        "valor_total_cop": 1.0,
+        "valor_iva_cop": 0.19,
+        "proveedor": "NEGAWATT",
+        "servicio": "Asesoría y consultoría técnica",
+        "_fuente_pdf": "3.NEGAWATT - FRONTERA MGS 0025.pdf"
+      },
+      {
+        "alcance": "Santa Marta Magdalena, 27 de marzo de 2025 Señores. SOLENIUM Ing. Víctor Manuel Agudelo Jiménez Ciudad. Asunto. COTIZACION INSTALACIÓN OBRA ELÉCTRICA MINIGRANJA EL COPEY Estimado Cliente, G30 Soluciones S.A.S., a través de su equipo de ingenieros, se permite presentar cotización de acuerdo a su necesidad. A continuación, encontrará la descripción de los Insumos y Servicios solicitados. DESCRIPCIÓN UNIDAD CANTIDAD Valor unitario Valor total PV MODULOS Montaje de modulos fotovoltaicos Longi de 650 W bifacial sobre seguidor solar Und 2.032 $ 15.000 $ 30.480.000 INVERSORES Montaje de inversor SUN2000-330KTL-H1 marca Huawei sobre estrutura metalica por medio de mensula Und 3 $ 1.200.000 $ 3.600.000 Montaje de inversor SUN2000-50KTL-M3 marca Huawei sobre estructura metalica por medio de mensula Und 1 $ 1.100.000 $ 1.100.000 Montaje de inversor SUN2000-40KTL-M3 marca Huawei sobre estructura metalica por medio de mensula Und 1 $ 1.100.000 $ 1.100.000 TRACKER Armado de seguidor solar 1PX80 modulos, sin hincado, montaje, alineación, nivelación, torqueado con torquimetro la tornilleria y marcaciones de los siguientes elementos: Unidad motriz, tubos de torsion y uniones, correas para soporte de modulos, rodamiento, dampers, equipotencializador de malla a tierra, controlador de unidad motriz, antenas y estacion meteorologica. Und 2 $ 1.600.000 $ 3.200.000 Armado de seguidor solar 1PX78 modulos, sin hincado, montaje, alineación, nivelación, torqueado con torquimetro la tornilleria y marcaciones de los siguientes elementos: Unidad motriz, tubos de torsion y uniones, correas para soporte de modulos, rodamiento, dampers, equipotencializador de malla a tierra, controlador de unidad motriz, antenas y estacion meteorologica. Und 24 $ 1.560.000 $ 37.440.000 INSTALACIÓN OBRA ELÉCTRICA MINIGRANJA EL COPEY OCCIDENTE MGS 0025 UBICADA EN EL COPEY CESAR.",
+        "valor_total_cop": 650.0,
+        "valor_iva_cop": 19.0,
+        "proveedor": null,
+        "servicio": null,
+        "_fuente_pdf": "4.G30 - ELECTROMECANICO MGS 0025.pdf"
+      },
+      {
+        "alcance": "S&J CODINCO INGENIERIA SAS Calle 49 #50 - 21 Edificio del Café Oficina 1704 – Medellín, Antioquia Contacto: +57 300 445 38 20 direccion.comercial@codincoingenieria.com COTIZACIÓN 250046-CODINCO-COT-CON_(A) Medellín, 28 de Abril de 2025 Respetado Ingeniero Víctor Manuel Agudelo SOLENIUM Medellín - Antioquia Referencia: Propuesta económica para realizar las obras civiles en el proyecto MGS0025  “Minigranja Solar el Copey” ubicado en la vereda Alejandría-La Victoria del Municipio El Copey, departamento de El Cesar, Colombia. 1. DESCRIPCIÓN DEL PROYECTO. Ejecutar las actividades de obra civil indicadas en la tabla 1, las cuales conforman el alcance técnico del proyecto de generación fotovoltaica “Minigranja El Copey”. Imagen 1. Localización general de las zonas a estudiar. Tomado de Google Maps. 2. ALCANCE Y PROPUESTA ECONÓMICA. En la tabla 1 se presenta el alcance detallado y las cantidades de cada una de las actividades planteadas para el proyecto. Las especificaciones técnicas de cada actividad fueron determinadas de acuerdo con las necesidades indicadas por el MGS 0025 MGS 0025",
+        "valor_total_cop": 180.34,
+        "valor_iva_cop": 19.0,
+        "proveedor": null,
+        "servicio": null,
+        "_fuente_pdf": "5.CODINCO -CIVIL- El Copey MGS0025.pdf"
+      },
+      {
+        "alcance": "Oferta No. SGI-PE-04025 Carrera 10 No. 5-18 Bodega 3 Parque Industrial, Corregimiento La Playa- Barranquilla Tel. 6053374332 Cel. 3008143741-3052264903; www.transefi.com Página 1 de 2 Barranquilla, 30 de abril de 2025 Señores SOLENIUM Calle 46 No. 70 A -79 Att. Ing. Victor Agudelo Jimenez Ingeniero de Proyectos Email: victor@solenium.co Cel. 301 409 1338 Medellín - Antioquia ASUNTO:  PRUEBAS DE RELACION DE TRANSFORMACION (TTR) Y RESISTENCIA DE AISLAMIENTO A TRES TRANSFORMADORES EN PROYECTO MGS 0025 Atendiendo su solicitud y con base en información suministrada por ustedes, nos complace presentar nuestra mejor oferta para realizar prueba de TTR y de resistencia de aislamiento a un transformador principal y dos de baja tensión en el proyecto solar MGS 0025, ubicado en el Copey – Cesar. ALCANCE DE LA OFERTA • Verificación de las normas de seguridad y aplicación de cinco reglas de oro. • Inspección técnica por parte de un ingeniero eléctrico especialista en transformadores, para valorar el estado físico de los equipos y su instalación. • Desconexión de los transformadores (por parte del cliente) • Pruebas de Relación de transformación (TTR) y de resistencia de aislamiento, en la posición del conmutador en que se encuentran, a tres transformadores de las siguientes características:  trafo 1,25 MVA – 13.8kV/800 V, trafo de 110 kVA – 800V/480V y trafo 6 kVA. • Informe con reporte de los resultados arrojados en las mediciones y recomendaciones a que haya lugar. CONDICIONES COMERCIALES PRECIO Tres millones doscientos mil pesos m/c ($ 3.200.000) IVA Se debe incluir al valor de esta oferta, el IVA vigente en la fecha de facturación. NOTAS • El precio de esta oferta está sujeto a cambios en el evento en que se requieran actividades y materiales no contemplados en ella y sea solicitados y/o o autorizados de manera formal por el cliente. • Es responsabilidad del cliente la coordinación de los permisos de entrada a las áreas de trabajo en el tiempo previamente definido y contar con personal de la empresa que haga el acompañamiento a nuestro personal.",
+        "valor_total_cop": 3200000.0,
+        "valor_iva_cop": 4025.0,
+        "proveedor": null,
+        "servicio": null,
+        "_fuente_pdf": "6.TRANSEFI - PRUEBAS TTR MGS 0025.pdf"
+      },
+      {
+        "alcance": "Solenium - Calle 46 #70 A 79 - 315 500 0797 PROPUESTA DE: INGENIERÍA DE DETALLE - PUESTA EN MARCHA DEL SISTEMA E HINCADO MGS 0025 EL COPEY - CESAR",
+        "valor_total_cop": 675992989.0,
+        "valor_iva_cop": 46.0,
+        "proveedor": null,
+        "servicio": null,
+        "_fuente_pdf": "7.SOLENIUM_EL COPEY MGS 0025 ING - PUESTA MARCHA - HINCADO.pdf"
+      },
+      {
+        "alcance": "Solenium - Calle 46 #70 A 79 - 315 500 0797 PROPUESTA DE: INGENIERÍA DE DETALLE - PUESTA EN MARCHA DEL SISTEMA E HINCADO MGS 0025 EL COPEY - CESAR",
+        "valor_total_cop": 675992989.0,
+        "valor_iva_cop": 46.0,
+        "proveedor": null,
+        "servicio": null,
+        "_fuente_pdf": "8.SOLENIUM_EL COPEY MGS 0025 ING - PUESTA MARCHA - HINCADO (1).pdf"
+      },
+      {
+        "alcance": "​Caracterización​ ​física​ ​del​ ​suelo​ ​basados​ ​en​ ​ensayos​ ​de​ ​clasificación​ ​según​ ​normas​ ​Icontec​ ​e​ ​Invias​ ​(Ensayos​ ​de​ ​Granulometría,​​Límites​​de​​Consistencia,​​Peso​​Unitario,​​Contenido​ ​de Humedad y Ensayo SPT in situ).​ ​Caracterización​​mecánica​​del​​suelo,​​atendiendo​​la​​teoría​​expuesta​ ​por​ ​Terzagui​ ​y​ ​correlaciones​ ​para​ ​obtención​ ​de​ ​parámetros​ ​de​ ​resistencia al corte.​ ​Recomendaciones​​de​​fundación.​​Acompañamiento​​antes,​​durante​ ​y después de la construcción de la obra si así lo requiere el cliente.​",
+        "valor_total_cop": 8749797.0,
+        "valor_iva_cop": 1662461.43,
+        "proveedor": "Unergy",
+        "servicio": "Asesoría y consultoría técnica",
+        "_fuente_pdf": "9.Cotización RTB P.A. SOL DE LA SIERRA MGS 0025 - copia (2).pdf"
+      },
+      {
+        "alcance": "​Caracterización​ ​física​ ​del​ ​suelo​ ​basados​ ​en​ ​ensayos​ ​de​ ​clasificación​ ​según​ ​normas​ ​Icontec​ ​e​ ​Invias​ ​(Ensayos​ ​de​ ​Granulometría,​​Límites​​de​​Consistencia,​​Peso​​Unitario,​​Contenido​ ​de Humedad y Ensayo SPT in situ).​ ​Caracterización​​mecánica​​del​​suelo,​​atendiendo​​la​​teoría​​expuesta​ ​por​ ​Terzagui​ ​y​ ​correlaciones​ ​para​ ​obtención​ ​de​ ​parámetros​ ​de​ ​resistencia al corte.​ ​Recomendaciones​​de​​fundación.​​Acompañamiento​​antes,​​durante​ ​y después de la construcción de la obra si así lo requiere el cliente.​",
+        "valor_total_cop": 8749797.0,
+        "valor_iva_cop": 1662461.43,
+        "proveedor": "Unergy",
+        "servicio": "Asesoría y consultoría técnica",
+        "_fuente_pdf": "9.Cotización RTB P.A. SOL DE LA SIERRA MGS 0025 - copia (3).pdf"
+      },
+      {
+        "alcance": "​Caracterización​ ​física​ ​del​ ​suelo​ ​basados​ ​en​ ​ensayos​ ​de​ ​clasificación​ ​según​ ​normas​ ​Icontec​ ​e​ ​Invias​ ​(Ensayos​ ​de​ ​Granulometría,​​Límites​​de​​Consistencia,​​Peso​​Unitario,​​Contenido​ ​de Humedad y Ensayo SPT in situ).​ ​Caracterización​​mecánica​​del​​suelo,​​atendiendo​​la​​teoría​​expuesta​ ​por​ ​Terzagui​ ​y​ ​correlaciones​ ​para​ ​obtención​ ​de​ ​parámetros​ ​de​ ​resistencia al corte.​ ​Recomendaciones​​de​​fundación.​​Acompañamiento​​antes,​​durante​ ​y después de la construcción de la obra si así lo requiere el cliente.​",
+        "valor_total_cop": 8749797.0,
+        "valor_iva_cop": 1662461.43,
+        "proveedor": "Unergy",
+        "servicio": "Asesoría y consultoría técnica",
+        "_fuente_pdf": "9.Cotización RTB P.A. SOL DE LA SIERRA MGS 0025 - copia (4).pdf"
+      },
+      {
+        "alcance": "​Caracterización​ ​física​ ​del​ ​suelo​ ​basados​ ​en​ ​ensayos​ ​de​ ​clasificación​ ​según​ ​normas​ ​Icontec​ ​e​ ​Invias​ ​(Ensayos​ ​de​ ​Granulometría,​​Límites​​de​​Consistencia,​​Peso​​Unitario,​​Contenido​ ​de Humedad y Ensayo SPT in situ).​ ​Caracterización​​mecánica​​del​​suelo,​​atendiendo​​la​​teoría​​expuesta​ ​por​ ​Terzagui​ ​y​ ​correlaciones​ ​para​ ​obtención​ ​de​ ​parámetros​ ​de​ ​resistencia al corte.​ ​Recomendaciones​​de​​fundación.​​Acompañamiento​​antes,​​durante​ ​y después de la construcción de la obra si así lo requiere el cliente.​",
+        "valor_total_cop": 8749797.0,
+        "valor_iva_cop": 1662461.43,
+        "proveedor": "Unergy",
+        "servicio": "Asesoría y consultoría técnica",
+        "_fuente_pdf": "9.Cotización RTB P.A. SOL DE LA SIERRA MGS 0025 - copia (5).pdf"
+      },
+      {
+        "alcance": "​Caracterización​ ​física​ ​del​ ​suelo​ ​basados​ ​en​ ​ensayos​ ​de​ ​clasificación​ ​según​ ​normas​ ​Icontec​ ​e​ ​Invias​ ​(Ensayos​ ​de​ ​Granulometría,​​Límites​​de​​Consistencia,​​Peso​​Unitario,​​Contenido​ ​de Humedad y Ensayo SPT in situ).​ ​Caracterización​​mecánica​​del​​suelo,​​atendiendo​​la​​teoría​​expuesta​ ​por​ ​Terzagui​ ​y​ ​correlaciones​ ​para​ ​obtención​ ​de​ ​parámetros​ ​de​ ​resistencia al corte.​ ​Recomendaciones​​de​​fundación.​​Acompañamiento​​antes,​​durante​ ​y después de la construcción de la obra si así lo requiere el cliente.​",
+        "valor_total_cop": 8749797.0,
+        "valor_iva_cop": 1662461.43,
+        "proveedor": "Unergy",
+        "servicio": "Asesoría y consultoría técnica",
+        "_fuente_pdf": "9.Cotización RTB P.A. SOL DE LA SIERRA MGS 0025 - copia (6).pdf"
+      },
+      {
+        "alcance": "​Caracterización​ ​física​ ​del​ ​suelo​ ​basados​ ​en​ ​ensayos​ ​de​ ​clasificación​ ​según​ ​normas​ ​Icontec​ ​e​ ​Invias​ ​(Ensayos​ ​de​ ​Granulometría,​​Límites​​de​​Consistencia,​​Peso​​Unitario,​​Contenido​ ​de Humedad y Ensayo SPT in situ).​ ​Caracterización​​mecánica​​del​​suelo,​​atendiendo​​la​​teoría​​expuesta​ ​por​ ​Terzagui​ ​y​ ​correlaciones​ ​para​ ​obtención​ ​de​ ​parámetros​ ​de​ ​resistencia al corte.​ ​Recomendaciones​​de​​fundación.​​Acompañamiento​​antes,​​durante​ ​y después de la construcción de la obra si así lo requiere el cliente.​",
+        "valor_total_cop": 8749797.0,
+        "valor_iva_cop": 1662461.43,
+        "proveedor": "Unergy",
+        "servicio": "Asesoría y consultoría técnica",
+        "_fuente_pdf": "9.Cotización RTB P.A. SOL DE LA SIERRA MGS 0025 - copia (7).pdf"
+      },
+      {
+        "alcance": "​Caracterización​ ​física​ ​del​ ​suelo​ ​basados​ ​en​ ​ensayos​ ​de​ ​clasificación​ ​según​ ​normas​ ​Icontec​ ​e​ ​Invias​ ​(Ensayos​ ​de​ ​Granulometría,​​Límites​​de​​Consistencia,​​Peso​​Unitario,​​Contenido​ ​de Humedad y Ensayo SPT in situ).​ ​Caracterización​​mecánica​​del​​suelo,​​atendiendo​​la​​teoría​​expuesta​ ​por​ ​Terzagui​ ​y​ ​correlaciones​ ​para​ ​obtención​ ​de​ ​parámetros​ ​de​ ​resistencia al corte.​ ​Recomendaciones​​de​​fundación.​​Acompañamiento​​antes,​​durante​ ​y después de la construcción de la obra si así lo requiere el cliente.​",
+        "valor_total_cop": 8749797.0,
+        "valor_iva_cop": 1662461.43,
+        "proveedor": "Unergy",
+        "servicio": "Asesoría y consultoría técnica",
+        "_fuente_pdf": "9.Cotización RTB P.A. SOL DE LA SIERRA MGS 0025 - copia.pdf"
+      },
+      {
+        "alcance": "​Caracterización​ ​física​ ​del​ ​suelo​ ​basados​ ​en​ ​ensayos​ ​de​ ​clasificación​ ​según​ ​normas​ ​Icontec​ ​e​ ​Invias​ ​(Ensayos​ ​de​ ​Granulometría,​​Límites​​de​​Consistencia,​​Peso​​Unitario,​​Contenido​ ​de Humedad y Ensayo SPT in situ).​ ​Caracterización​​mecánica​​del​​suelo,​​atendiendo​​la​​teoría​​expuesta​ ​por​ ​Terzagui​ ​y​ ​correlaciones​ ​para​ ​obtención​ ​de​ ​parámetros​ ​de​ ​resistencia al corte.​ ​Recomendaciones​​de​​fundación.​​Acompañamiento​​antes,​​durante​ ​y después de la construcción de la obra si así lo requiere el cliente.​",
+        "valor_total_cop": 8749797.0,
+        "valor_iva_cop": 1662461.43,
+        "proveedor": "Unergy",
+        "servicio": "Asesoría y consultoría técnica",
+        "_fuente_pdf": "9.Cotización RTB P.A. SOL DE LA SIERRA MGS 0025.pdf"
+      }
+    ],
+    "fuente": "PDFs en Servicios Definitivos + Copey definitivo.xlsx"
+  },
+  "_proyecto": "MGS_0025_EVA2_El Copey Occidente",
+  "_errores": []
+}
