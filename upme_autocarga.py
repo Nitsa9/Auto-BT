@@ -1,6 +1,7 @@
 import os
 import re
 import math
+from pathlib import Path
 import pandas as pd
 from playwright.sync_api import sync_playwright
 
@@ -10,9 +11,10 @@ USUARIO = "1102867750"
 PASSWORD = "S0L3N1UM"
 RADICADO = "FNCE_202612071"
 
-EXCEL_FILE = r"C:\Users\rober\Desktop\Automatismo\El COPEY.xlsx"
+BASE_DIR = Path(__file__).parent
+EXCEL_FILE = str(BASE_DIR / "data" / "El COPEY.xlsx")
 SHEET = "FORMATO 3"
-PDF_DIR = r"C:\Users\rober\Desktop\Automatismo\Fichastecnicas"
+PDF_DIR = str(BASE_DIR / "Fichastecnicas")
 
 # IVA fijo (ajústalo aquí si aplica otro)
 IVA_FIJO = "19"
