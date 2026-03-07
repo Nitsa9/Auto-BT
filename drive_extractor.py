@@ -15,8 +15,9 @@ from googleapiclient.http import MediaIoBaseDownload
 # CONFIGURACIÓN
 # ===========================================================================
 
-GOOGLE_TOKEN  = r"C:\Hackaton2026\token.json"
-OUTPUT_DIR    = r"C:\Hackaton2026\MGS_0025"
+_BASE = Path(__file__).parent
+GOOGLE_TOKEN  = str(_BASE / "Recursos" / "token.json")
+OUTPUT_DIR    = str(_BASE / "data" / "MGS_0025")
 
 # IDs mapeados de la estructura real en Drive
 FILES_TO_DOWNLOAD = [
@@ -32,6 +33,18 @@ FILES_TO_DOWNLOAD = [
     ("06_Financial/06_BT/01_Tracker_FNCE_20251551/01_Formato1",
      "1mQkM9KuJiGTqtcjqM6xJGxOpCW3ukxES",
      "01 CAMARA DE COMERCIO AYURA - 21112024.pdf", False),
+
+    ("03_Engineering/05_Final version/03_Layouts 2D",
+     "1FTBbTqFqGbnMZAfgSnbFP1oIQxeb8sFo",
+     "SDS4_Cope-CIV-PL-01_Plano de localizaciones y accesos.pdf", False),
+
+    ("03_Engineering/05_Final version/01_Simulation",
+     "1b73jCj1AxdxaXsVgw7Zv890HtChJPGdd",
+     "Cope-INF-ELE-V2.pdf", False),
+
+    ("06_Financial/06_BT",
+     "1QY-1WovvCffyNAWdwG7rkrplwgNXJuWp",
+     "Copey definitivo.xlsx", False),
 ]
 
 # Carpetas completas (descargar todos los archivos)
@@ -45,6 +58,9 @@ FOLDERS_TO_DOWNLOAD = [
 
     ("06_Financial/06_BT/04_Servicios_Cacica",
      "1rL8oDbKLloRnwHl1pbtqIJSLTcyVwmR2"),
+
+    ("06_Financial/06_BT/Servicios Definitivos",
+     "1zHnzEcKaNCulNZv-aN9ZIz3OugN_wIw4"),
 ]
 
 GSHEET_MIME = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
