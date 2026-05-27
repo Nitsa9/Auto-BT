@@ -31,12 +31,14 @@ from openpyxl.styles import Border, Side
 from rapidfuzz import fuzz, process
 
 # =====================================================================
-# RUTAS DE ARCHIVOS — ajusta estas rutas a tu máquina
+# RUTAS DE ARCHIVOS — solo cambia los nombres de archivo
 # =====================================================================
-PATH_PAPA   = Path("C:/Users/usuario/Documents/Auto-BT/Formato 3/El_Papá_de_los_formatos_CON_ODOO.xlsx")
-PATH_PEPC   = Path("C:/Users/usuario/Documents/Auto-BT/Formato 3/PEPC 2.0_Magangué Oc_MGS_0054_CFM.xlsx")
-PATH_BOM    = Path("C:/Users/usuario/Documents/Auto-BT/Formato 3/BOM_MAGANGUÉOC1.xlsx")
-PATH_SALIDA = Path("C:/Users/usuario/Documents/Auto-BT/Formato 3/El_Papá_de_los_formatos_ACTUALIZADO.xlsx")
+DIR_FORMATO3 = Path(__file__).parent  # siempre apunta a la carpeta Formato 3 del repo
+
+PATH_PAPA   = DIR_FORMATO3 / "El_Papá_de_los_formatos_CON_ODOO.xlsx"
+PATH_PEPC   = DIR_FORMATO3 / "PEPC 2.0_Magangué Oc_MGS_0054_CFM.xlsx"
+PATH_BOM    = DIR_FORMATO3 / "BOM_MAGANGUÉOC1.xlsx"
+PATH_SALIDA = DIR_FORMATO3 / "El_Papá_de_los_formatos_ACTUALIZADO.xlsx"
 
 # =====================================================================
 # COMPLETAR CÓDIGO ODOO (opcional)
@@ -51,7 +53,7 @@ COMPLETAR_PEPC = True
 # Déjalo en None si no tienes uno; el matching usará solo BOM y Papá.
 # Si lo necesitas, descomenta la línea siguiente y ajusta la ruta:
 PATH_PEPC_REFERENCIA: Path | None = None
-PATH_PEPC_REFERENCIA = Path("C:/Users/usuario/Documents/Auto-BT/Formato 3/PEPC_1P_GENERICO_NOCFM.xlsx")
+PATH_PEPC_REFERENCIA = DIR_FORMATO3 / "PEPC_1P_GENERICO_NOCFM.xlsx"
 
 # El PEPC completado se guardará aquí (solo se usa si COMPLETAR_PEPC = True).
 PATH_PEPC_COMPLETADO = PATH_PEPC.parent / (PATH_PEPC.stem + "_completado.xlsx")
