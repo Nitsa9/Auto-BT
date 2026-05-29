@@ -36,9 +36,13 @@ from rapidfuzz import fuzz, process
 DIR_FORMATO3 = Path(__file__).parent  # siempre apunta a la carpeta Formato 3 del repo
 
 PATH_PAPA   = DIR_FORMATO3 / "El_Papá_de_los_formatos_CON_ODOO.xlsx"
-PATH_PEPC   = DIR_FORMATO3 / "PEPC 2.0_Magangué Oc_MGS_0054_CFM.xlsx"
-PATH_BOM    = DIR_FORMATO3 / "BOM_MAGANGUÉOC1.xlsx"
-PATH_SALIDA = DIR_FORMATO3 / "El_Papá_de_los_formatos_ACTUALIZADO.xlsx"
+PATH_PEPC   = DIR_FORMATO3 / "PEPC 2.0_MompoxNorte1_MGS_0044_CFM.xlsx"
+PATH_BOM    = DIR_FORMATO3 / "BOM Mompox 1 - Bill of Materials.xlsx"
+PATH_SALIDA = DIR_FORMATO3 / "BT-cantidades-Mompox.xlsx"
+
+# Ruta al Excel de precios auxiliares (Odoo ID → precio unitario).
+# Ponlo en None para deshabilitar esta funcionalidad.
+PATH_PRECIOS_AUX = DIR_FORMATO3 / "precios_auxiliares_con_odoo.xlsx"
 
 # =====================================================================
 # COMPLETAR CÓDIGO ODOO (opcional)
@@ -104,12 +108,25 @@ NOMBRES_IVA_CERO = {
     "Inversores o microinversores (Off Gid, Grid Tie o Híbrido)",
 }
 
+# Nombres de categorías para reglas de negocio
+NOMBRE_INVERSORES   = "Inversores o microinversores (Off Gid, Grid Tie o Híbrido)"
+NOMBRE_MC4          = "Conectores MC4"
+NOMBRE_CABLES_DC    = "Cables Solares DC"
+NOMBRE_CANALIZACION = "Canalizaciones: canaletas, tubos, prefabricadas con barras o con cables, ductos subterráneos"
+
+# Nombre de la hoja de ítems omitidos (renombrada)
+HOJA_OMITIDOS = "Items BT faltantes - Omitidos"
+
 # Valores que NO son IDs reales y deben ignorarse
 IDS_INVALIDOS = {
     "", "0", "no encontrado", "no creado en odoo", "no se encuentra item", "nan",
 }
 
 IVA_RATE = 0.19
+
+# Columnas del Excel de precios auxiliares
+COL_AUX_ID     = "Odoo ID"
+COL_AUX_PRECIO = "Precio"
 
 # Columnas clave para auto-detección de encabezados
 # PEPC: "Código Odoo" puede no existir en el archivo objetivo (se crea después),
@@ -124,6 +141,61 @@ _CLAVES_F3       = ["Nombre del Elemento", "Odoo ID", "Cantidad"]
 # =====================================================================
 # HELPERS
 # =====================================================================
+
+def cargar_precios_auxiliares(path: Path | None) -> dict:
+    """Carga el Excel de precios auxiliares y devuelve un dict
+    {odoo_id_normalizado: {"precio": float, "es_tubo": bool}}.
+
+    Los ítems cuya columna Descripción contenga la palabra "tubo"
+    (sin importar mayúsculas) se marcan con es_tubo=True; su cantidad
+    se multiplicará por 50 antes de calcular el Valor total.
+
+    Si path es None o el archivo no existe, devuelve un dict vacío
+    (la funcionalidad queda desactivada sin romper el flujo principal).
+    """
+    if path is None:
+        return {}
+    if not path.exists():
+        print(f"\n⚠ Archivo de precios auxiliares no encontrado: {path}. "
+              "Se omite la aplicación de precios auxiliares.")
+        return {}
+
+    df = pd.read_excel(path)
+
+    # Buscar columnas tolerando variaciones de nombre
+    try:
+        col_id     = encontrar_columna(df, COL_AUX_ID)
+        col_precio = encontrar_columna(df, COL_AUX_PRECIO)
+    except KeyError as e:
+        print(f"\n⚠ Excel de precios auxiliares: {e}. "
+              "Se omite la aplicación de precios auxiliares.")
+        return {}
+
+    # Columna Descripción es opcional; si no existe, ningún ítem es tubo
+    try:
+        col_desc = encontrar_columna(df, "Descripción")
+    except KeyError:
+        col_desc = None
+
+    lookup = {}
+    n_tubos = 0
+    for _, row in df.iterrows():
+        id_norm = limpiar_id(row[col_id])
+        precio  = pd.to_numeric(row[col_precio], errors="coerce")
+        if not id_norm or pd.isna(precio):
+            continue
+        es_tubo = False
+        if col_desc is not None:
+            desc = str(row[col_desc]) if pd.notna(row[col_desc]) else ""
+            es_tubo = "tubo" in desc.lower()
+        if es_tubo:
+            n_tubos += 1
+        lookup[id_norm] = {"precio": float(precio), "es_tubo": es_tubo}
+
+    print(f"\nPrecios auxiliares cargados: {len(lookup)} entradas "
+          f"desde \'{path.name}\' ({n_tubos} marcadas como tubo ×50).")
+    return lookup
+
 
 def encontrar_columna(df, fragmento: str) -> str:
     """Busca la columna cuyo nombre contenga el fragmento (ignora
@@ -286,7 +358,7 @@ def reducir_max(df, col_id, col_valor, label):
 # PROCESAR FORMATO 3
 # =====================================================================
 
-def procesar(df_pepc, df_f3, df_bom, trm):
+def procesar(df_pepc, df_f3, df_bom, trm, precios_aux: dict | None = None):
     df_f3 = df_f3.copy()
 
     # Detectar columnas de Formato 3
@@ -359,12 +431,18 @@ def procesar(df_pepc, df_f3, df_bom, trm):
     df_f3[COL_F3_VALOR_TOT] = df_f3.apply(lambda r: precios_pepc.get(r["_id_norm"], 0),   axis=1)
 
     # Actualizar Proveedor desde BOM
-    # Reglas:
-    #   - Si el ID no está en BOM → dejar el valor existente en F3 sin tocar.
-    #   - Si está en BOM pero PROVEEDOR está vacío → dejar el valor existente en F3.
-    #   - Si está en BOM y PROVEEDOR tiene valor → reemplazar.
+    # Reglas (en orden de prioridad):
+    #   1. Si BOM1 (archivo original, antes de completar) tiene proveedor → usar ese.
+    #   2. Si BOM1 no tiene pero BOM2 (referencia) completó el proveedor → usar ese.
+    #   3. Si ninguno tiene proveedor para ese ID → conservar el valor del Papá.
+    # En la práctica df_bom ya llega con los proveedores de BOM2 inyectados sobre
+    # los vacíos de BOM1 (paso 3b de main), así que el lookup refleja exactamente
+    # esa prioridad: BOM1 primero, BOM2 como fallback.
+    # Solo si el lookup no tiene nada para el ID se conserva el Papá.
     if COL_F3_PROVEEDOR is not None and COL_BOM_PROVEEDOR in df_bom.columns:
-        # Construir lookup {id_norm → proveedor} solo con filas del BOM que tengan proveedor
+        # Construir lookup {id_norm → proveedor} con todas las filas del BOM
+        # que tengan proveedor (BOM1 ya tiene prioridad porque sus valores no
+        # fueron sobreescritos por completar_proveedor_bom, que solo rellena vacíos).
         proveedores_bom = {}
         for _, row in df_bom.iterrows():
             id_ = row.get("_id_norm")
@@ -374,20 +452,54 @@ def procesar(df_pepc, df_f3, df_bom, trm):
 
         def actualizar_proveedor(row):
             id_ = row["_id_norm"]
-            if id_ not in ids_bom:
-                # Sin coincidencia en BOM → conservar valor del Papá
-                return row[COL_F3_PROVEEDOR]
             prov_bom = proveedores_bom.get(id_)
-            if not prov_bom:
-                # Coincide con BOM pero sin proveedor → conservar valor del Papá
-                return row[COL_F3_PROVEEDOR]
-            return prov_bom
+            if prov_bom:
+                # BOM1 o BOM2 tiene proveedor → usarlo siempre
+                return prov_bom
+            # Ninguno tiene proveedor para este ID → conservar el del Papá
+            return row[COL_F3_PROVEEDOR]
 
         df_f3[COL_F3_PROVEEDOR] = df_f3.apply(actualizar_proveedor, axis=1)
         actualizados = df_f3["_id_norm"].isin(proveedores_bom).sum()
         print(f"\n  Proveedores actualizados en FORMATO 3: {actualizados} filas")
     elif COL_F3_PROVEEDOR is None:
         print("\n  ℹ FORMATO 3 no tiene columna Proveedor — se omite actualización.")
+
+    # ── Precios auxiliares: sobrescribir Valor total si hay coincidencia ─
+    # Reglas:
+    #   - Si el Odoo ID del ítem coincide con el Excel de precios auxiliares:
+    #       · Si el ítem tiene Cantidad válida → Valor total = precio_unitario × cantidad
+    #       · Si NO tiene Cantidad → dejar el precio que tenía (sin cambios)
+    #   - Si no hay coincidencia → no se toca nada
+    if precios_aux:
+        n_aplicados = 0
+        n_sin_cantidad = 0
+
+        def aplicar_precio_aux(row):
+            nonlocal n_aplicados, n_sin_cantidad
+            id_ = row["_id_norm"]
+            if id_ not in precios_aux:
+                return row[COL_F3_VALOR_TOT]          # sin coincidencia → sin cambio
+            entrada     = precios_aux[id_]
+            precio_unit = entrada["precio"]
+            es_tubo     = entrada["es_tubo"]
+            cantidad = pd.to_numeric(row[COL_F3_CANTIDAD], errors="coerce")
+            if pd.isna(cantidad) or cantidad == 0:
+                n_sin_cantidad += 1
+                return row[COL_F3_VALOR_TOT]          # sin cantidad → precio anterior
+            # Los tubos vienen en rollos de 50 unidades: cantidad × 50
+            if es_tubo:
+                cantidad = cantidad * 50
+            n_aplicados += 1
+            return precio_unit * cantidad
+
+        df_f3[COL_F3_VALOR_TOT] = df_f3.apply(aplicar_precio_aux, axis=1)
+
+        print(f"\n  Precios auxiliares aplicados: {n_aplicados} ítems actualizados "
+              f"(precio_unitario × cantidad).")
+        if n_sin_cantidad:
+            print(f"  ℹ {n_sin_cantidad} ítems con Odoo ID en precios auxiliares "
+                  "pero sin Cantidad válida → precio sin cambios.")
 
     # Recalcular IVA
     def calcular_iva(row):
@@ -416,16 +528,209 @@ def procesar(df_pepc, df_f3, df_bom, trm):
         print("\n✓ Todos los Odoo ID coinciden en ambos archivos (PEPC y BOM).")
 
     df_f3 = df_f3.drop(columns=["_id_norm"])
-    return df_f3
+
+    # ── Reglas de negocio post-procesamiento ──────────────────────────
+    df_f3, df_omitidos = aplicar_reglas_negocio(
+        df_f3,
+        col_nombre   = COL_F3_NOMBRE,
+        col_cantidad = COL_F3_CANTIDAD,
+        col_valor    = COL_F3_VALOR_TOT,
+        col_iva      = COL_F3_IVA,
+        col_id       = COL_F3_ID,
+        iva_rate     = IVA_RATE,
+        nombres_iva_cero = NOMBRES_IVA_CERO,
+    )
+
+    return df_f3, df_omitidos
+
+
+
+# =====================================================================
+# REGLAS DE NEGOCIO POST-PROCESAMIENTO
+# =====================================================================
+
+def aplicar_reglas_negocio(
+    df: "pd.DataFrame",
+    col_nombre: str,
+    col_cantidad: str,
+    col_valor: str,
+    col_iva: str,
+    col_id: str,
+    iva_rate: float,
+    nombres_iva_cero: set,
+) -> "tuple[pd.DataFrame, pd.DataFrame]":
+    """Aplica las 6 reglas de negocio sobre el FORMATO 3 ya procesado.
+
+    Devuelve (df_final, df_omitidos).
+    df_omitidos acumula todas las filas eliminadas para escribirlas en
+    la hoja 'Items BT faltantes / Omitidos'.
+    """
+    df = df.copy()
+    omitidos: list[pd.DataFrame] = []
+
+    def _cantidad(row):
+        return pd.to_numeric(row[col_cantidad], errors="coerce")
+
+    def _precio(row):
+        return pd.to_numeric(row[col_valor], errors="coerce")
+
+    def _nombre(row):
+        return str(row[col_nombre]).strip() if pd.notna(row[col_nombre]) else ""
+
+    def _recalc_iva(nombre, valor):
+        if nombre in nombres_iva_cero:
+            return 0
+        v = pd.to_numeric(valor, errors="coerce")
+        return None if pd.isna(v) else v * iva_rate
+
+    # ── Regla 1: Inversores sin cantidad → ceden precio a los que sí tienen ─
+    mask_inv = df[col_nombre].apply(
+        lambda n: str(n).strip() == NOMBRE_INVERSORES if pd.notna(n) else False
+    )
+    df_inv = df[mask_inv].copy()
+
+    if not df_inv.empty:
+        sin_cant = df_inv[df_inv.apply(lambda r: pd.isna(_cantidad(r)) or _cantidad(r) == 0, axis=1)]
+        con_cant = df_inv[df_inv.apply(lambda r: not (pd.isna(_cantidad(r)) or _cantidad(r) == 0), axis=1)]
+
+        if not sin_cant.empty and not con_cant.empty:
+            # Sumar precio total e IVA de los sin cantidad
+            precio_donado = sin_cant[col_valor].apply(lambda v: pd.to_numeric(v, errors="coerce")).fillna(0).sum()
+            iva_donado    = sin_cant[col_iva].apply(lambda v: pd.to_numeric(v, errors="coerce")).fillna(0).sum()
+
+            # El precio total se copia íntegro a CADA receptor (no se divide)
+            for idx in con_cant.index:
+                precio_actual = pd.to_numeric(df.at[idx, col_valor], errors="coerce")
+                # Solo asignar si el receptor no tiene precio propio
+                if pd.isna(precio_actual) or precio_actual == 0:
+                    df.at[idx, col_valor] = precio_donado
+                    df.at[idx, col_iva]   = iva_donado
+
+            omitidos.append(sin_cant.copy())
+            df = df.drop(index=sin_cant.index)
+            print(f"\n  Regla 1 (Inversores): {len(sin_cant)} filas sin cantidad eliminadas, "
+                  f"precio cedido a {len(con_cant)} fila(s) con cantidad.")
+        elif not sin_cant.empty:
+            # No hay receptores; las sin cantidad se omiten igualmente
+            omitidos.append(sin_cant.copy())
+            df = df.drop(index=sin_cant.index)
+            print(f"\n  Regla 1 (Inversores): {len(sin_cant)} filas sin cantidad eliminadas "
+                  "(sin receptores con cantidad disponibles).")
+
+    # ── Regla 2: Conectores MC4 → suma y reparte igualitariamente ────────
+    mask_mc4 = df[col_nombre].apply(
+        lambda n: str(n).strip() == NOMBRE_MC4 if pd.notna(n) else False
+    )
+    df_mc4 = df[mask_mc4].copy()
+
+    if len(df_mc4) > 1:
+        total_precio = df_mc4[col_valor].apply(lambda v: pd.to_numeric(v, errors="coerce")).fillna(0).sum()
+        total_iva    = df_mc4[col_iva].apply(lambda v: pd.to_numeric(v, errors="coerce")).fillna(0).sum()
+        n_mc4 = len(df_mc4)
+        precio_por_item = total_precio / n_mc4
+        iva_por_item    = total_iva    / n_mc4
+        for idx in df_mc4.index:
+            df.at[idx, col_valor] = precio_por_item
+            df.at[idx, col_iva]   = iva_por_item
+        print(f"\n  Regla 2 (MC4): precio total {total_precio:,.0f} repartido "
+              f"igualitariamente entre {n_mc4} conectores ({precio_por_item:,.0f} c/u).")
+
+    # ── Regla 3: Cables Solares DC → consolidar en una sola fila ─────────
+    mask_cab = df[col_nombre].apply(
+        lambda n: str(n).strip() == NOMBRE_CABLES_DC if pd.notna(n) else False
+    )
+    df_cab = df[mask_cab].copy()
+
+    if len(df_cab) >= 2:
+        precios = df_cab[col_valor].apply(lambda v: pd.to_numeric(v, errors="coerce"))
+        con_precio = precios.notna() & (precios > 0)
+        n_con_precio = con_precio.sum()
+
+        if n_con_precio >= 2:
+            precio_total = precios.fillna(0).sum()
+        elif n_con_precio == 1:
+            precio_total = precios[con_precio].iloc[0] * 2
+        else:
+            precio_total = 0
+
+        # Consolidar IDs en la primera fila
+        ids_cable = df_cab[col_id].dropna().astype(str).str.strip()
+        ids_cable = [i for i in ids_cable if i and i.lower() not in {"nan", ""}]
+        id_consolidado = " / ".join(ids_cable) if ids_cable else df_cab[col_id].iloc[0]
+
+        # Nombre del elemento de la primera fila
+        nombre_cab = _nombre(df_cab.iloc[0])
+
+        # Sumar cantidades
+        cantidades = df_cab[col_cantidad].apply(lambda v: pd.to_numeric(v, errors="coerce")).fillna(0)
+        cantidad_total = cantidades.sum()
+
+        # Actualizar primera fila conservada
+        idx_primero = df_cab.index[0]
+        df.at[idx_primero, col_valor]    = precio_total
+        df.at[idx_primero, col_iva]      = _recalc_iva(nombre_cab, precio_total)
+        df.at[idx_primero, col_id]       = id_consolidado
+        df.at[idx_primero, col_cantidad] = cantidad_total
+
+        # Eliminar el resto
+        filas_extra = df_cab.index[1:]
+        omitidos.append(df.loc[filas_extra].copy())
+        df = df.drop(index=filas_extra)
+        print(f"\n  Regla 3 (Cables DC): {len(df_cab)} filas consolidadas en 1. "
+              f"Precio total: {precio_total:,.0f}. IDs: {id_consolidado}")
+
+    # ── Regla 4: Canalizaciones con cantidad = 0 → eliminar ──────────────
+    mask_can = df[col_nombre].apply(
+        lambda n: str(n).strip() == NOMBRE_CANALIZACION if pd.notna(n) else False
+    )
+    cero_cant = df[mask_can].apply(
+        lambda r: pd.isna(_cantidad(r)) or _cantidad(r) == 0, axis=1
+    )
+    filas_can_cero = df[mask_can & cero_cant]
+
+    if not filas_can_cero.empty:
+        omitidos.append(filas_can_cero.copy())
+        df = df.drop(index=filas_can_cero.index)
+        print(f"\n  Regla 4 (Canalizaciones): {len(filas_can_cero)} filas con "
+              "cantidad = 0 eliminadas.")
+
+    # ── Regla 5: Cualquier fila con cantidad Y precio = 0 → eliminar ─────
+    def _es_cero_o_nulo(v):
+        n = pd.to_numeric(v, errors="coerce")
+        return pd.isna(n) or n == 0
+
+    mask_cant_cero  = df[col_cantidad].apply(_es_cero_o_nulo)
+    mask_precio_cero = df[col_valor].apply(_es_cero_o_nulo)
+    filas_doble_cero = df[mask_cant_cero & mask_precio_cero]
+
+    if not filas_doble_cero.empty:
+        omitidos.append(filas_doble_cero.copy())
+        df = df.drop(index=filas_doble_cero.index)
+        print(f"\n  Regla 5 (cantidad y precio = 0): {len(filas_doble_cero)} filas eliminadas.")
+
+    # ── Consolidar omitidos ───────────────────────────────────────────────
+    if omitidos:
+        df_omitidos = pd.concat(omitidos, ignore_index=True)
+        # Eliminar duplicados (una fila puede haber calificado en varias reglas)
+        df_omitidos = df_omitidos.drop_duplicates()
+    else:
+        df_omitidos = pd.DataFrame(columns=df.columns)
+
+    total_omitidos = len(df_omitidos)
+    print(f"\n  Total filas omitidas/eliminadas acumuladas: {total_omitidos} "
+          f"(→ hoja '{HOJA_OMITIDOS}')")
+
+    return df.reset_index(drop=True), df_omitidos
 
 
 # =====================================================================
 # ESCRIBIR RESULTADO EN EL PAPÁ DE LOS FORMATOS
 # =====================================================================
 
-def escribir_resultado(df_f3_final):
+def escribir_resultado(df_f3_final, df_omitidos: "pd.DataFrame | None" = None):
     """Sobreescribe la hoja FORMATO 3 conservando header y formato.
-    Borra las filas de datos existentes y escribe las nuevas."""
+    Borra las filas de datos existentes y escribe las nuevas.
+    Si se pasa df_omitidos, escribe (o crea) la hoja de ítems omitidos."""
     PATH_SALIDA.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy(PATH_PAPA, PATH_SALIDA)
 
@@ -464,6 +769,59 @@ def escribir_resultado(df_f3_final):
     for fila in range(header_row_f3, ultima_fila + 1):
         for col in range(1, ws.max_column + 1):
             ws.cell(row=fila, column=col).border = borde
+
+    # ── Hoja de ítems omitidos (Regla 6) ─────────────────────────────
+    if df_omitidos is not None and not df_omitidos.empty:
+        # Renombrar hoja si aún tiene el nombre anterior
+        nombres_candidatos = [
+            HOJA_OMITIDOS,
+            "Items BT faltantes / Omitidos",
+            "Items BT faltantes",
+            "Ítems BT faltantes",
+            "Items BT Faltantes",
+        ]
+        ws_omit = None
+        for nombre_hoja in nombres_candidatos:
+            if nombre_hoja in wb.sheetnames:
+                ws_omit = wb[nombre_hoja]
+                ws_omit.title = HOJA_OMITIDOS
+                break
+
+        if ws_omit is None:
+            ws_omit = wb.create_sheet(title=HOJA_OMITIDOS)
+
+        # Estrategia de escritura:
+        #   Fila 1 → título original de la hoja (se conserva si existe, si no se deja vacía)
+        #   Fila 2 → encabezados de columnas del DataFrame
+        #   Fila 3+ → datos
+
+        # Guardar título original (fila 1) antes de limpiar
+        titulo_original = ws_omit.cell(row=1, column=1).value
+
+        # Borrar todo el contenido de la hoja
+        ws_omit.delete_rows(1, ws_omit.max_row)
+
+        # Restaurar título en fila 1
+        if titulo_original:
+            ws_omit.cell(row=1, column=1, value=titulo_original)
+
+        # Escribir encabezados del DataFrame en fila 2
+        cols_omit = list(df_omitidos.columns)
+        for j, col_name in enumerate(cols_omit, start=1):
+            ws_omit.cell(row=2, column=j, value=col_name)
+
+        # Escribir datos desde fila 3
+        for i, (_, row) in enumerate(df_omitidos.iterrows(), start=3):
+            for j, val in enumerate(row, start=1):
+                ws_omit.cell(row=i, column=j, value=None if pd.isna(val) else val)
+
+        print(f"  ✓ {len(df_omitidos)} ítems omitidos escritos en hoja '{HOJA_OMITIDOS}'.")
+
+    # ── Eliminar hojas que no son FORMATO 3 ni omitidos ─────────────
+    hojas_conservar = {"FORMATO 3", HOJA_OMITIDOS}
+    for nombre in list(wb.sheetnames):
+        if nombre not in hojas_conservar:
+            del wb[nombre]
 
     wb.save(PATH_SALIDA)
     wb.close()
@@ -1094,11 +1452,13 @@ def main():
     print(f"  TRM utilizada: {trm:,.2f}")
 
     # ── Paso 5: procesar Formato 3 ────────────────────────────────────
-    df_final = procesar(df_pepc, df_f3, df_bom, trm)
+    precios_aux = cargar_precios_auxiliares(PATH_PRECIOS_AUX)
+    df_final, df_omitidos = procesar(df_pepc, df_f3, df_bom, trm, precios_aux=precios_aux)
     print(f"\nFORMATO 3 final: {df_final.shape[0]} filas")
+    print(f"Ítems omitidos:  {df_omitidos.shape[0]} filas")
 
     # ── Paso 6: exportar ──────────────────────────────────────────────
-    escribir_resultado(df_final)
+    escribir_resultado(df_final, df_omitidos=df_omitidos)
     print(f"\n✓ Archivo guardado en: {PATH_SALIDA}")
 
 
