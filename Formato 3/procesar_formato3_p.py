@@ -117,6 +117,11 @@ NOMBRE_CANALIZACION = "Canalizaciones: canaletas, tubos, prefabricadas con barra
 # Nombre de la hoja de ítems omitidos (renombrada)
 HOJA_OMITIDOS = "Items BT faltantes - Omitidos"
 
+# Palabras que, si aparecen en la descripción de una entrada de lookup,
+# la excluyen del matching de Código Odoo (evita falsos positivos con
+# ítems de transporte/logística que comparten palabras clave con equipos).
+PALABRAS_EXCLUIR_LOOKUP = {"transporte", "nacionalización", "legalizacion", "legalización"}
+
 # Valores que NO son IDs reales y deben ignorarse
 IDS_INVALIDOS = {
     "", "0", "no encontrado", "no creado en odoo", "no se encuentra item", "nan",
@@ -236,6 +241,24 @@ def limpiar_id(valor) -> str | None:
     if s.lower() in IDS_INVALIDOS:
         return None
     return s.upper()
+
+
+def _desc_excluida(desc: str) -> bool:
+    """Devuelve True si la descripción contiene alguna palabra de
+    PALABRAS_EXCLUIR_LOOKUP (sin importar mayúsculas ni tildes).
+
+    Las entradas excluidas no se añaden a ningún lookup de matching,
+    evitando que ítems de transporte/logística compitan con equipos
+    reales al asignar el Código Odoo.
+    """
+    import unicodedata
+
+    def _norm_word(w: str) -> str:
+        w = unicodedata.normalize("NFKD", w.lower())
+        return w.encode("ascii", "ignore").decode()
+
+    desc_norm = _norm_word(desc)
+    return any(_norm_word(p) in desc_norm for p in PALABRAS_EXCLUIR_LOOKUP)
 
 
 def extraer_trm(valor_celda) -> float:
@@ -942,25 +965,46 @@ def completar_codigo_odoo(
     if usar_referencia:
         col_desc_ref = encontrar_columna(df_ref, "DESCRIPCIÓN")
         col_odoo_ref = encontrar_columna(df_ref, "Código Odoo")
+        n_excluidas_ref = 0
         for _, row in df_ref.iterrows():
             desc = str(row[col_desc_ref]).strip() if pd.notna(row[col_desc_ref]) else ""
             cod  = limpiar_id(row[col_odoo_ref])
             if desc and cod:
+                if _desc_excluida(desc):
+                    n_excluidas_ref += 1
+                    continue
                 lookup_ref[desc.lower()] = (desc, cod)
+        if n_excluidas_ref:
+            print(f"  ℹ {n_excluidas_ref} entradas del PEPC referencia excluidas del lookup "
+                  f"(contienen: {sorted(PALABRAS_EXCLUIR_LOOKUP)})")
 
     lookup_bom = {}
+    n_excluidas_bom = 0
     for _, row in df_bom.iterrows():
         mat = str(row[col_bom_mat]).strip() if pd.notna(row[col_bom_mat]) else ""
         cod = limpiar_id(row[col_bom_id])
         if mat and cod:
+            if _desc_excluida(mat):
+                n_excluidas_bom += 1
+                continue
             lookup_bom[mat.lower()] = (mat, cod)
+    if n_excluidas_bom:
+        print(f"  ℹ {n_excluidas_bom} entradas del BOM excluidas del lookup "
+              f"(contienen: {sorted(PALABRAS_EXCLUIR_LOOKUP)})")
 
     lookup_f3 = {}
+    n_excluidas_f3 = 0
     for _, row in df_f3.iterrows():
         mod = str(row[col_f3_modelo]).strip() if pd.notna(row[col_f3_modelo]) else ""
         cod = limpiar_id(row[col_f3_odoo])
         if mod and cod:
+            if _desc_excluida(mod):
+                n_excluidas_f3 += 1
+                continue
             lookup_f3[mod.lower()] = (mod, cod)
+    if n_excluidas_f3:
+        print(f"  ℹ {n_excluidas_f3} entradas del FORMATO 3 excluidas del lookup "
+              f"(contienen: {sorted(PALABRAS_EXCLUIR_LOOKUP)})")
 
     claves_ref = list(lookup_ref.keys())
     claves_bom = list(lookup_bom.keys())
